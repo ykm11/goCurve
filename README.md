@@ -9,3 +9,16 @@ Worth lerning.
 
 ## Why don't you use sageMath?  
 You must be kidding.
+
+
+# Features  
+
+## Simple Usage  
+
+```
+a := Str2Int("14", 10) // convert to *big.Int
+b := Str2Int("7", 10)
+p := Str2int("19", 10)
+
+EC := New(a, b, p) // Define an EllipticCurve; y^2 = x^3 + ax + b (mod p)
+```
