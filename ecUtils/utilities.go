@@ -14,6 +14,10 @@ func Str2Int(str string, base int) *big.Int {
     return n
 }
 
+func Byte2Int(b []byte) *big.Int {
+    return new(big.Int).SetBytes(b)
+}
+
 func bool2int(b bool) int {
     if b {
         return 1

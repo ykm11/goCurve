@@ -2,7 +2,6 @@ package main
 
 import (
     "fmt"
-    "math/big"
     . "./ecUtils"
     "./random"
 )
@@ -26,7 +25,7 @@ func main() {
     fmt.Println("[+] Base Point G:", Point2Str(G))
 
     m := "This is a message"
-    e := GetLeftmostNBits(new(big.Int).SetBytes(GetHash(m)), 126, 256)
+    e := GetLeftmostNBits(Byte2Int(GetHash(m)), 126, 256)
     fmt.Printf("[+] Message: %s\n", m)
     fmt.Printf("[+] Message Hash: %x\n", e)
     d := random.Randint(n)
