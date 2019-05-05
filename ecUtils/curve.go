@@ -28,7 +28,7 @@ type ellipticCurve struct {
     Modulus *big.Int
 }
 
-func New(a, b, modulus *big.Int) ellipticCurve {
+func NewCurve(a, b, modulus *big.Int) ellipticCurve {
     return ellipticCurve{a, b, modulus}
 }
 
@@ -97,7 +97,7 @@ func (ec ellipticCurve) PointDoubling(P Point) Point {
     return Point{x3, y3, false}
 }
 
-func (ec EllipticCurve) Point_xP(x *big.Int, p Point) Point {
+func (ec ellipticCurve) Point_xP(x *big.Int, p Point) Point {
     k := O
     n := new(big.Int).SetBytes(x.Bytes()) // Not to change 'x' (address) value
 

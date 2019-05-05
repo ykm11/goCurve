@@ -15,7 +15,7 @@ func main() {
 
     n := Str2Int("1461501637330902918203687197606826779884643492439", 10)
 
-    EC := New(A, B, modulus)
+    EC := NewCurve(A, B, modulus)
     EC.PrintCurve()
     //fmt.Printf("[+] Order n: %d\n", n)
 
