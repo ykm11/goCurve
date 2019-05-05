@@ -43,26 +43,6 @@ func (p Point) Xy() (*big.Int, *big.Int){
     return p.X, p.Y
 }
 
-func make_divlist(n *big.Int) []int {
-    div := []int{}
-    for ; n.Cmp(ONE) != 0; {
-        t := 0
-        if r := new(big.Int).Mod(n, TWO); r.Cmp(ONE) == 0 {
-            n.Sub(n, ONE)
-            div = append(div, 0)
-        }
-        for ;; {
-            if r := new(big.Int).Mod(n, TWO); r.Cmp(ONE) == 0 {
-                break
-            }
-            n.Div(n, TWO)
-            t = t + 1
-        }
-        div = append(div, t)
-    }
-    return div
-}
-
 func (ec ellipticCurve) PrintCurve() {
     fmt.Printf("[+] EC: y^2 = x^3 + %dx + %d  OVER Zmod(%d)\n",
         ec.A, ec.B, ec.Modulus)
@@ -116,21 +96,30 @@ func (ec ellipticCurve) PointDoubling(P Point) Point {
 
     return Point{x3, y3, false}
 }
-func (ec ellipticCurve) Point_xP(x *big.Int, p Point) Point {
-    base_p := Point{p.X, p.Y, p.IsUnit}
+
+func (ec EllipticCurve) Point_xP(x *big.Int, p Point) Point {
+    k := O
     n := new(big.Int).SetBytes(x.Bytes()) // Not to change 'x' (address) value
 
-    div := make_divlist(n)
-    for idx := len(div)-1; idx >= 0; idx-- {
-        if div[idx] == 0 {
-            p = ec.PointAdd(p, base_p)
-        } else {
-            for i := 0; i < div[idx]; i++ {
-                p = ec.PointDoubling(p)
-            }
+    /*
+    def mul(a, n)
+        k = O
+        while n != 0
+            if n % 2 == 1
+                k = add(k, a)
+            end
+            a = add(a, a)
+            n /= 2
+        end
+    */
+    for ; n.Cmp(ZERO) != 0 ; {
+        if new(big.Int).Mod(n, TWO).Cmp(ONE) == 0 {
+            k = ec.PointAdd(k, p)
         }
+        p = ec.PointDoubling(p)
+        n.Div(n, TWO)
     }
-    return p
+    return k
 }
 
 func (ec ellipticCurve) VerifySignature(r, s, e, n *big.Int, G, Q Point) bool {
