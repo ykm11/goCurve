@@ -49,8 +49,8 @@ func (ec ellipticCurve) PrintCurve() {
 }
 
 func (ec ellipticCurve) Exist(X, Y *big.Int) bool {
-    l := expMod(Y, TWO, ec.Modulus)
-    r1 := expMod(X, THREE, ec.Modulus)
+    l := exp(Y, TWO, ec.Modulus)
+    r1 := exp(X, THREE, ec.Modulus)
     r2 := mul(ec.A, X, ec.Modulus)
     r := add(add(r1, r2, ec.Modulus), ec.B, ec.Modulus)
     return l.Cmp(r) == 0
@@ -76,7 +76,7 @@ func (ec ellipticCurve) PointAdd(P, Q Point) Point {
 
     lmd := mul(sub(Q.Y, P.Y, ec.Modulus),
                 invmod(sub(Q.X, P.X, ec.Modulus), ec.Modulus), ec.Modulus)
-    x3 := sub(sub(expMod(lmd, TWO, ec.Modulus), P.X, ec.Modulus), Q.X, ec.Modulus)
+    x3 := sub(sub(exp(lmd, TWO, ec.Modulus), P.X, ec.Modulus), Q.X, ec.Modulus)
     y3 := sub(mul(lmd, sub(P.X, x3, ec.Modulus), ec.Modulus), P.Y, ec.Modulus)
 
     return Point{x3, y3, false}
@@ -88,10 +88,10 @@ func (ec ellipticCurve) PointDoubling(P Point) Point {
     }
 
     lmd := mul(add(mul(
-                    THREE, expMod(P.X, TWO, ec.Modulus), ec.Modulus),
+                    THREE, exp(P.X, TWO, ec.Modulus), ec.Modulus),
                 ec.A, ec.Modulus),
             invmod(mul(TWO, P.Y, ec.Modulus), ec.Modulus), ec.Modulus)
-    x3 := sub(sub(expMod(lmd, TWO, ec.Modulus), P.X, ec.Modulus), P.X, ec.Modulus)
+    x3 := sub(sub(exp(lmd, TWO, ec.Modulus), P.X, ec.Modulus), P.X, ec.Modulus)
     y3 := sub(mul(lmd, sub(P.X, x3, ec.Modulus), ec.Modulus), P.Y, ec.Modulus)
 
     return Point{x3, y3, false}
