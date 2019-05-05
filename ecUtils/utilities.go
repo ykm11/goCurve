@@ -31,6 +31,11 @@ func Point2Str(p Point) string {
     return str
 }
 
+func ValCopy(x *big.Int) *big.Int {
+    r := new(big.Int).SetBytes(x.Bytes())
+    return r
+}
+
 func GetLeftmostNBits(x *big.Int, n_bits, x_bits uint) *big.Int {
     return new(big.Int).Rsh(x, x_bits-n_bits)
 }
