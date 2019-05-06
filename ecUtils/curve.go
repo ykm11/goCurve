@@ -143,15 +143,15 @@ func (ec ellipticCurve) Sign(e, d, n *big.Int, G Point) (*big.Int, *big.Int) {
 func (ec ellipticCurve) Order(p Point, algorithm string) *big.Int {
     var cardinality *big.Int
     switch algorithm {
-    case "exhausive":
-        cardinality = exhaosiveSearchOrder(ec, p)
+    case "exhaustive":
+        cardinality = exhaostiveSearchOrder(ec, p)
     default:
-        cardinality = exhaosiveSearchOrder(ec, p)
+        cardinality = exhaostiveSearchOrder(ec, p)
     }
     return cardinality
 }
 
-func exhaosiveSearchOrder(ec ellipticCurve, p Point) *big.Int {
+func exhaostiveSearchOrder(ec ellipticCurve, p Point) *big.Int {
     if p.IsUnit {
         return ONE
     }
