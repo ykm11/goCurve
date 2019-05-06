@@ -6,14 +6,13 @@ import (
     "../random"
 )
 
-
 var (
     ZERO = big.NewInt(0)
     ONE = big.NewInt(1)
     TWO = big.NewInt(2)
     THREE = big.NewInt(3)
 
-    O = Point{ZERO, ONE, true}
+    Origin = Point{ZERO, ONE, true}
 )
 
 type Point struct {
@@ -65,7 +64,7 @@ func (ec ellipticCurve) PointAdd(P, Q Point) Point {
         return ec.PointDoubling(P)
     }
     if P.X.Cmp(Q.X) == 0 {
-        return O
+        return Origin
     }
     if P.IsUnit {
         return Q
@@ -84,7 +83,7 @@ func (ec ellipticCurve) PointAdd(P, Q Point) Point {
 
 func (ec ellipticCurve) PointDoubling(P Point) Point {
     if P.Y.Cmp(ZERO) == 0 {
-        return O
+        return Origin
     }
 
     lmd := mul(add(mul(
@@ -98,12 +97,12 @@ func (ec ellipticCurve) PointDoubling(P Point) Point {
 }
 
 func (ec ellipticCurve) Point_xP(x *big.Int, p Point) Point {
-    k := O
-    n := new(big.Int).SetBytes(x.Bytes()) // Not to change 'x' (address) value
+    k := Origin
+    n := ValCopy(x) // Not to change 'x' (address) value
 
     /*
     def mul(a, n)
-        k = O
+        k = Origin
         while n != 0
             if n % 2 == 1
                 k = add(k, a)
@@ -141,3 +140,26 @@ func (ec ellipticCurve) Sign(e, d, n *big.Int, G Point) (*big.Int, *big.Int) {
     return r, s
 }
 
+func (ec ellipticCurve) Order(p Point, algorithm string) *big.Int {
+    var cardinality *big.Int
+    switch algorithm {
+    case "exhausive":
+        cardinality = exhaosiveSearchOrder(ec, p)
+    default:
+        cardinality = exhaosiveSearchOrder(ec, p)
+    }
+    return cardinality
+}
+
+func exhaosiveSearchOrder(ec ellipticCurve, p Point) *big.Int {
+    if p.IsUnit {
+        return ONE
+    }
+    p2 := ec.PointDoubling(p)
+    cardinality := TWO
+    for ; !p2.IsUnit ; {
+        p2 = ec.PointAdd(p2, p)
+        cardinality = add(cardinality, ONE, nil)
+    }
+    return cardinality
+}
