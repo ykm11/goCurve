@@ -5,6 +5,13 @@ import (
     "math/big"
 )
 
+var (
+    ZERO = big.NewInt(0)
+    ONE = big.NewInt(1)
+    TWO = big.NewInt(2)
+    THREE = big.NewInt(3)
+)
+
 func add(a, b, modulus *big.Int) *big.Int {
     r := new(big.Int).Add(a, b)
     if modulus != nil {
@@ -40,6 +47,10 @@ func div(a, b *big.Int) *big.Int { // a % b == 0
 }
 func mod(x, modulus *big.Int) *big.Int {
     return new(big.Int).Mod(x, modulus)
+}
+func ceil_sqrt(x *big.Int) *big.Int {
+    r := new(big.Int).Sqrt(sub(x, ONE, nil))
+    return add(r, ONE, nil)
 }
 
 func Extgcd(x, y *big.Int) (*big.Int, *big.Int, *big.Int) {
@@ -83,3 +94,4 @@ func CRT(remainders, modulus []*big.Int) *big.Int {
     }
     return mod(x, N)
 }
+

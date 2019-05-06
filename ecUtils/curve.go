@@ -7,11 +7,6 @@ import (
 )
 
 var (
-    ZERO = big.NewInt(0)
-    ONE = big.NewInt(1)
-    TWO = big.NewInt(2)
-    THREE = big.NewInt(3)
-
     Origin = Point{ZERO, ONE, true}
 )
 
@@ -138,28 +133,4 @@ func (ec ellipticCurve) Sign(e, d, n *big.Int, G Point) (*big.Int, *big.Int) {
     s := mul(invmod(k, n), add(e, mul(r, d, n), n), n)
     fmt.Printf("[+] Signature (r, s): (%d, %d)\n", r, s)
     return r, s
-}
-
-func (ec ellipticCurve) Order(p Point, algorithm string) *big.Int {
-    var cardinality *big.Int
-    switch algorithm {
-    case "exhaustive":
-        cardinality = exhaostiveSearchOrder(ec, p)
-    default:
-        cardinality = exhaostiveSearchOrder(ec, p)
-    }
-    return cardinality
-}
-
-func exhaostiveSearchOrder(ec ellipticCurve, p Point) *big.Int {
-    if p.IsUnit {
-        return ONE
-    }
-    p2 := ec.PointDoubling(p)
-    cardinality := TWO
-    for ; !p2.IsUnit ; {
-        p2 = ec.PointAdd(p2, p)
-        cardinality = add(cardinality, ONE, nil)
-    }
-    return cardinality
 }
