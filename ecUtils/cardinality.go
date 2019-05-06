@@ -31,7 +31,8 @@ func exhaostiveSearchOrder(ec ellipticCurve, p Point) *big.Int {
 
 func BsGs(ec ellipticCurve, P, Q Point) *big.Int {
     // Find d; Q = [d]P, otherwise nil
-    m := ceil_sqrt(ec.Order(P, "exhaustive"))
+    cardinality := ec.Order(P, "exhaustive")
+    m := ceil_sqrt(cardinality)
 
     // Baby Step
     b := Q
@@ -49,7 +50,7 @@ func BsGs(ec ellipticCurve, P, Q Point) *big.Int {
     for i := ONE; i.Cmp(m) == -1; i = add(i, ONE, nil) { // [1, m)
         index := ExistInPointArray(Giant, baby)
         if index != nil {
-            return add(mul(i, m, nil), index, nil)
+            return mod(add(mul(i, m, nil), index, nil), cardinality)
         } else {
             Giant = ec.PointAdd(Giant, mP)
         }
