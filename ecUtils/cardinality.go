@@ -47,7 +47,7 @@ func BsGs(ec ellipticCurve, P, Q Point, cardinality *big.Int) *big.Int {
 	// Giant Step
 	mP := ec.Point_xP(m, P)
 	Giant := mP
-	for i := ONE; i.Cmp(m) == -1; i = add(i, ONE, nil) { // [1, m)
+	for i := ZERO; i.Cmp(m) == -1; i = add(i, ONE, nil) { // [0, m)
 		index := ExistInPointArray(Giant, baby)
 		if index != nil {
 			d := add(mul(i, m, nil), index, nil)
