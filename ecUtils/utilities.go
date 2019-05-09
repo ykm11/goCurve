@@ -44,3 +44,8 @@ func GetHash(message string) []byte {
     return hash[:]
 }
 
+func Legendre(x, p *big.Int) bool { // is x a quadratic-residue?
+    r := exp(x, div(sub(p, ONE, p), TWO), p)
+    return r.Cmp(ONE) == 0
+}
+
