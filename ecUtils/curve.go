@@ -95,17 +95,6 @@ func (ec ellipticCurve) Point_xP(x *big.Int, p Point) Point {
     k := Origin
     n := ValCopy(x) // Not to change 'x' (address) value
 
-    /*
-    def mul(a, n)
-        k = Origin
-        while n != 0
-            if n % 2 == 1
-                k = add(k, a)
-            end
-            a = add(a, a)
-            n /= 2
-        end
-    */
     for ; n.Cmp(ZERO) != 0 ; {
         if new(big.Int).Mod(n, TWO).Cmp(ONE) == 0 {
             k = ec.PointAdd(k, p)

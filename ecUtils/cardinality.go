@@ -82,6 +82,7 @@ func Pollard_rho_f(ec ellipticCurve, alpha, beta, x Point, a, b, order *big.Int)
 }
 
 func Pollard_rho_ECDLP(alpha, beta Point, ec ellipticCurve, order *big.Int) *big.Int {
+    // beta = [d] * alpha; d < order
     a, b, x := ZERO, ZERO, Origin
     A, B, X := ValCopy(a), ValCopy(b), x
 
