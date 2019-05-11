@@ -47,7 +47,7 @@ func BsGs(ec ellipticCurve, P, Q Point, cardinality *big.Int) *big.Int {
 	// Giant Step
 	mP := ec.Point_xP(m, P)
 	Giant := mP
-	for i := ZERO; i.Cmp(m) == -1; i = add(i, ONE, nil) { // [0, m)
+	for i := ONE; i.Cmp(m) == -1; i = add(i, ONE, nil) { // [1, m)
 		index := ExistInPointArray(Giant, baby)
 		if index != nil {
 			d := add(mul(i, m, nil), index, nil)
@@ -81,6 +81,7 @@ func Pollard_rho_f(ec ellipticCurve, alpha, beta, x Point, a, b, order *big.Int)
     }
 }
 
+// Solver doesn's work when cardinality is not a prime num. You need to factorize.
 func Pollard_rho_ECDLP(alpha, beta Point, ec ellipticCurve, order *big.Int) *big.Int {
     // beta = [d] * alpha; d < order
     a, b, x := ZERO, ZERO, Origin
@@ -97,4 +98,23 @@ func Pollard_rho_ECDLP(alpha, beta Point, ec ellipticCurve, order *big.Int) *big
         }
     }
     return nil
+}
+
+func Solve_ECDLP(ec ellipticCurve, P, Q Point, order *big.Int) *big.Int {
+    if P.IsUnit && Q.IsUnit { // Already Q = P = O, so Q = [0]P
+        return ZERO
+    }
+
+    if order.Cmp(big.NewInt(100)) == -1 {
+        tmp_P := P
+        for i := ONE; i.Cmp(big.NewInt(20)) == -1; i = add(i, ONE, nil) {
+            if cmpPoint(tmp_P, Q) {
+                return i
+            }
+            tmp_P = ec.PointAdd(tmp_P, P)
+        }
+    } else if order.Cmp(big.NewInt(1000)) == -1 {
+        return BsGs(ec, P, Q, order)
+    }
+    return Pollard_rho_ECDLP(P, Q, ec, order)
 }
