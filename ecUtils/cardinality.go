@@ -82,15 +82,15 @@ func Pollard_rho_f(ec ellipticCurve, alpha, beta, x Point, a, b, order *big.Int)
 }
 
 // Solver doesn's work when cardinality is not a prime num. You need to factorize.
-func Pollard_rho_ECDLP(alpha, beta Point, ec ellipticCurve, order *big.Int) *big.Int {
-    // beta = [d] * alpha; d < order
+func Pollard_rho_ECDLP(P, Q Point, ec ellipticCurve, order *big.Int) *big.Int {
+    // Q = [d] * P; d < order
     a, b, x := ZERO, ZERO, Origin
     A, B, X := ValCopy(a), ValCopy(b), x
 
     for i := ZERO ; i.Cmp(order) == -1; i = add(i, ONE, nil) {
-        x, a, b = Pollard_rho_f(ec, alpha, beta, x, a, b, order)
-        X, A, B = Pollard_rho_f(ec, alpha, beta, X, A, B, order)
-        X, A, B = Pollard_rho_f(ec, alpha, beta, X, A, B, order)
+        x, a, b = Pollard_rho_f(ec, P, Q, x, a, b, order)
+        X, A, B = Pollard_rho_f(ec, P, Q, X, A, B, order)
+        X, A, B = Pollard_rho_f(ec, P, Q, X, A, B, order)
         if cmpPoint(x, X) &&
         !(A.Cmp(ZERO) == 0 && a.Cmp(ZERO) == 0 && B.Cmp(ZERO) == 0 && b.Cmp(ZERO) == 0) {
             r := sub(B, b, order)
