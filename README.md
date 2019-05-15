@@ -22,3 +22,6 @@ p := Str2int("19", 10)
 
 EC := NewCurve(a, b, p) // Define an EllipticCurve; y^2 = x^3 + ax + b (mod p)
 ```
+
+## solve ECDLP  
+I hope it runs faster than sageMath.
