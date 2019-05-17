@@ -72,7 +72,7 @@ func ExistInPointArray(P Point, PointArray []Point) *big.Int {
 }
 
 func Pollard_rho_f(ec ellipticCurve, alpha, beta, x Point, a, b, order *big.Int) (Point, *big.Int, *big.Int){
-    if mod(x.X, THREE).Cmp(ZERO) == 0{
+    if mod(x.X, THREE).Cmp(ZERO) == 0 {
         return ec.PointAdd(beta, x), a, add(b, ONE, order)
     } else if mod(x.X, THREE).Cmp(ONE) == 0 {
         return ec.PointDoubling(x), mul(a, TWO, order), mul(b, TWO, order)
@@ -81,7 +81,7 @@ func Pollard_rho_f(ec ellipticCurve, alpha, beta, x Point, a, b, order *big.Int)
     }
 }
 
-// Solver doesn's work when cardinality is not a prime num. You need to factorize.
+// Solver doesn's work when "order" is not a prime num. You need to factorize.
 func Pollard_rho_ECDLP(P, Q Point, ec ellipticCurve, order *big.Int) *big.Int {
     // Q = [d] * P; d < order
     a, b, x := ZERO, ZERO, Origin
@@ -92,7 +92,7 @@ func Pollard_rho_ECDLP(P, Q Point, ec ellipticCurve, order *big.Int) *big.Int {
         X, A, B = Pollard_rho_f(ec, P, Q, X, A, B, order)
         X, A, B = Pollard_rho_f(ec, P, Q, X, A, B, order)
         if cmpPoint(x, X) &&
-        !(A.Cmp(ZERO) == 0 && a.Cmp(ZERO) == 0 && B.Cmp(ZERO) == 0 && b.Cmp(ZERO) == 0) {
+        (A.Cmp(ZERO) != 0 && a.Cmp(ZERO) != 0 && B.Cmp(ZERO) != 0 && b.Cmp(ZERO) != 0) {
             r := sub(B, b, order)
             return mul(invmod(r, order), sub(a, A, order), order)
         }
@@ -107,13 +107,13 @@ func Solve_ECDLP(ec ellipticCurve, P, Q Point, order *big.Int) *big.Int {
 
     if order.Cmp(big.NewInt(100)) == -1 {
         tmp_P := P
-        for i := ONE; i.Cmp(big.NewInt(20)) == -1; i = add(i, ONE, nil) {
+        for i := ONE; i.Cmp(big.NewInt(100)) == -1; i = add(i, ONE, nil) {
             if cmpPoint(tmp_P, Q) {
                 return i
             }
             tmp_P = ec.PointAdd(tmp_P, P)
         }
-    } else if order.Cmp(big.NewInt(1000)) == -1 {
+    } else if order.Cmp(big.NewInt(10000)) == -1 {
         return BsGs(ec, P, Q, order)
     }
     return Pollard_rho_ECDLP(P, Q, ec, order)
