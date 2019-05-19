@@ -1,9 +1,8 @@
-package ecUtils
+package mathUtils
 
 import (
     "crypto/sha256"
     "math/big"
-    "fmt"
 )
 
 func Str2Int(str string, base int) *big.Int {
@@ -18,17 +17,12 @@ func Byte2Int(b []byte) *big.Int {
     return new(big.Int).SetBytes(b)
 }
 
-func bool2int(b bool) int {
+func Bool2int(b bool) int {
     if b {
         return 1
     } else {
         return 0
     }
-}
-
-func Point2Str(p Point) string {
-    str := fmt.Sprintf("(%d, %d; %d)", p.X, p.Y, bool2int(!p.IsUnit))
-    return str
 }
 
 func ValCopy(x *big.Int) *big.Int {
