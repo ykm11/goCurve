@@ -94,7 +94,9 @@ func Pollard_rho_ECDLP(P, Q Point, ec ellipticCurve, order *big.Int) *big.Int {
         if cmpPoint(x, X) &&
         (A.Cmp(ZERO) != 0 && a.Cmp(ZERO) != 0 && B.Cmp(ZERO) != 0 && b.Cmp(ZERO) != 0) {
             r := sub(B, b, order)
-            return mul(invmod(r, order), sub(a, A, order), order)
+            if r.Cmp(ZERO) != 0 {
+                return mul(invmod(r, order), sub(a, A, order), order)
+            }
         }
     }
     return nil
