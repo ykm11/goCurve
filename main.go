@@ -3,10 +3,11 @@ package main
 import (
     "fmt"
     . "./ecUtils"
+    . "./mathUtils"
     "./random"
 )
 
-func main() {
+func main() { // Eaxmple
     random.Setup()
 
     A := Str2Int("1461501637330902918203684832716283019653785059324", 10)
@@ -28,7 +29,7 @@ func main() {
     e := GetLeftmostNBits(Byte2Int(GetHash(m)), 126, 256)
     fmt.Printf("[+] Message: %s\n", m)
     fmt.Printf("[+] Message Hash: %x\n", e)
-    d := random.Randint(n)
+    d := random.Randint(nil, n)
     Q := EC.Point_xP(d, G)
     fmt.Println("[+] Q:", Point2Str(Q))
 
@@ -38,4 +39,5 @@ func main() {
     // Verify
     result := EC.VerifySignature(r, s, e, n, G, Q)
     fmt.Println("[+] Result of Validation:", result)
+
 }

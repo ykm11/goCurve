@@ -102,7 +102,7 @@ func (ec ellipticCurve) Point_xP(x *big.Int, p Point) Point {
     n := ValCopy(x) // Not to change 'x' (address) value
 
     for ; n.Cmp(ZERO) != 0 ; {
-        if new(big.Int).Mod(n, TWO).Cmp(ONE) == 0 {
+        if Mod(n, TWO).Cmp(ONE) == 0 {
             k = ec.PointAdd(k, p)
         }
         p = ec.PointDoubling(p)
@@ -121,7 +121,7 @@ func (ec ellipticCurve) VerifySignature(r, s, e, n *big.Int, G, Q Point) bool {
 }
 
 func (ec ellipticCurve) Sign(e, d, n *big.Int, G Point) (*big.Int, *big.Int) {
-    k := random.Randint(n)
+    k := random.Randint(nil, n)
     R := ec.Point_xP(k, G)
     fmt.Println("[+] (x1, y1) = [k]G:", Point2Str(R))
     r, _ := R.Xy()
