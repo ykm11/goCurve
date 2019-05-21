@@ -15,7 +15,7 @@ func pollard_rho_f(alpha, beta, x, a, b, p, order *big.Int) (*big.Int, *big.Int,
 }
 
 // when order is not prime, it doesn't work
-func pollard_rho_DLP(alpha, beta, p, order *big.Int) *big.Int {
+func Pollard_rho_DLP(alpha, beta, p, order *big.Int) *big.Int {
     // beta = alpha^x  (mod modulus)
     a, b, x := ZERO, ZERO, ONE
     A, B, X := ValCopy(a), ValCopy(b), ValCopy(x)
