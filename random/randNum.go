@@ -24,3 +24,22 @@ func Randint(offset, n *big.Int) *big.Int {
     }
 }
 
+func IsPrime(x *big.Int) bool {
+    return x.ProbablyPrime(20)
+}
+
+func GetPrime(nbits *big.Int) *big.Int {
+    offset := Exp(TWO, Sub(nbits, ONE, nil), nil)
+    end := Exp(TWO, nbits, nil)
+
+    for ;; {
+        k := Randint(offset, end)
+        if Mod(k, TWO).Cmp(ZERO) == 0 {
+            k = Add(k, ONE, nil)
+        }
+        if IsPrime(k) {
+            return k
+        }
+    }
+    return nil
+}
