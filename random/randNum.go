@@ -28,9 +28,10 @@ func IsPrime(x *big.Int) bool {
     return x.ProbablyPrime(20)
 }
 
-func GetPrime(nbits *big.Int) *big.Int {
-    offset := Exp(TWO, Sub(nbits, ONE, nil), nil)
-    end := Exp(TWO, nbits, nil)
+func GetPrime(nbits int64) *big.Int {
+    nbits_big := big.NewInt(nbits)
+    offset := Exp(TWO, Sub(nbits_big, ONE, nil), nil)
+    end := Exp(TWO, nbits_big, nil)
 
     for ;; {
         k := Randint(offset, end)
