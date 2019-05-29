@@ -28,14 +28,14 @@ func IsPrime(x *big.Int) bool {
     return x.ProbablyPrime(20)
 }
 
-func GetPrime(nbits int64) *big.Int {
-    nbits_big := big.NewInt(nbits)
-    offset := Exp(TWO, Sub(nbits_big, ONE, nil), nil)
-    end := Exp(TWO, nbits_big, nil)
+func GetPrime(nbits uint) *big.Int {
+    offset := new(big.Int).Lsh(ONE, nbits-1)
+    end := new(big.Int).Lsh(ONE, nbits)
 
     for ;; {
         k := Randint(offset, end)
-        k = Add(k, new(big.Int).Xor(k, ONE), nil)
+        lsb := new(big.Int).And(k, ONE)
+        k = Add(k, lsb.Xor(lsb, ONE), nil)
         if IsPrime(k) {
             return k
         }
