@@ -34,9 +34,10 @@ func GetPrime(nbits uint) *big.Int {
 
     for ;; {
         k := Randint(offset, end)
-        lsb := new(big.Int).And(k, ONE)
-        k = Add(k, lsb.Xor(lsb, ONE), nil)
-        if IsPrime(k) {
+        k_lsb := new(big.Int).And(k, ONE)
+        k = Add(k, k_lsb.Xor(k_lsb, ONE), nil)
+        //if IsPrime(k) {
+        if k.ProbablyPrime(20) {
             return k
         }
     }
