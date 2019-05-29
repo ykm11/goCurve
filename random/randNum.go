@@ -35,9 +35,7 @@ func GetPrime(nbits int64) *big.Int {
 
     for ;; {
         k := Randint(offset, end)
-        if Mod(k, TWO).Cmp(ZERO) == 0 {
-            k = Add(k, ONE, nil)
-        }
+        k = Add(k, new(big.Int).Xor(k, ONE), nil)
         if IsPrime(k) {
             return k
         }
