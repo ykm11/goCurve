@@ -48,6 +48,9 @@ func Div(a, b *big.Int) *big.Int { // a % b == 0
 func Mod(x, modulus *big.Int) *big.Int {
     return new(big.Int).Mod(x, modulus)
 }
+func GCD(x, y *big.Int) *big.Int {
+    return new(big.Int).GCD(nil, nil, x, y)
+}
 func Ceil_sqrt(x *big.Int) *big.Int {
     r := new(big.Int).Sqrt(Sub(x, ONE, nil))
     return Add(r, ONE, nil)
