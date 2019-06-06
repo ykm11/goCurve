@@ -13,6 +13,14 @@ func Str2Int(str string, base int) *big.Int {
     return n
 }
 
+func Str2IntArray(strArray []string, base int) []*big.Int {
+    bigIntArray := make([]*big.Int, len(strArray))
+    for i := 0; i < len(strArray); i++ {
+        bigIntArray[i] = Str2Int(strArray[i], base)
+    }
+    return bigIntArray
+}
+
 func Byte2Int(b []byte) *big.Int {
     return new(big.Int).SetBytes(b)
 }
