@@ -24,6 +24,13 @@ func Randint(offset, n *big.Int) *big.Int {
     }
 }
 
+func RandNbits(nbits uint) *big.Int {
+    offset := new(big.Int).Lsh(ONE, nbits-1)
+    end := new(big.Int).Lsh(ONE, nbits)
+    r := Randint(offset, end)
+    return r
+}
+
 func IsPrime(x *big.Int) bool {
     return x.ProbablyPrime(20)
 }
