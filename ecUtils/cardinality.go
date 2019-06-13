@@ -5,7 +5,7 @@ import (
     . "../mathUtils"
 )
 
-func (ec ellipticCurve) Order(p Point, algorithm string) *big.Int {
+func (ec EllipticCurve) Order(p Point, algorithm string) *big.Int {
 	var cardinality *big.Int
 	switch algorithm {
 	case "exhaustive":
@@ -16,7 +16,7 @@ func (ec ellipticCurve) Order(p Point, algorithm string) *big.Int {
 	return cardinality
 }
 
-func exhaostiveSearchOrder(ec ellipticCurve, p Point) *big.Int {
+func exhaostiveSearchOrder(ec EllipticCurve, p Point) *big.Int {
 	if p.IsUnit {
 		return ONE
 	}

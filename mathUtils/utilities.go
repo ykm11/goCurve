@@ -21,8 +21,8 @@ func Str2IntArray(strArray []string, base int) []*big.Int {
     return bigIntArray
 }
 
-func Byte2Int(s string) *big.Int {
-    return new(big.Int).SetBytes([]byte(s))
+func Bytes2Int(b []byte) *big.Int {
+    return new(big.Int).SetBytes(b)
 }
 
 func Bool2int(b bool) int {

@@ -5,7 +5,7 @@ import (
     . "../mathUtils"
 )
 
-func BsGs(ec ellipticCurve, P, Q Point, cardinality *big.Int) *big.Int {
+func BsGs(ec EllipticCurve, P, Q Point, cardinality *big.Int) *big.Int {
 	// Find d; Q = [d]P, otherwise nil
 
 	//cardinality := ec.Order(P, "exhaustive")
@@ -48,7 +48,7 @@ func ExistInPointArray(P Point, PointArray []Point) *big.Int {
 	return nil
 }
 
-func Pollard_rho_f(ec ellipticCurve, alpha, beta, x Point, a, b, order *big.Int) (Point, *big.Int, *big.Int){
+func Pollard_rho_f(ec EllipticCurve, alpha, beta, x Point, a, b, order *big.Int) (Point, *big.Int, *big.Int){
     if Mod(x.X, THREE).Cmp(ZERO) == 0 {
         return ec.PointAdd(beta, x), a, Add(b, ONE, order)
     } else if Mod(x.X, THREE).Cmp(ONE) == 0 {
@@ -59,7 +59,7 @@ func Pollard_rho_f(ec ellipticCurve, alpha, beta, x Point, a, b, order *big.Int)
 }
 
 // Solver doesn's work when "order" is not a prime num. You need to factorize.
-func Pollard_rho_ECDLP(P, Q Point, ec ellipticCurve, order *big.Int) *big.Int {
+func Pollard_rho_ECDLP(P, Q Point, ec EllipticCurve, order *big.Int) *big.Int {
     // Q = [d] * P; d < order
     a, b, x := ZERO, ZERO, Origin
     A, B, X := ValCopy(a), ValCopy(b), x
@@ -79,7 +79,7 @@ func Pollard_rho_ECDLP(P, Q Point, ec ellipticCurve, order *big.Int) *big.Int {
     return nil
 }
 
-func Solve_ECDLP(ec ellipticCurve, P, Q Point, order *big.Int) *big.Int {
+func Solve_ECDLP(ec EllipticCurve, P, Q Point, order *big.Int) *big.Int {
     if P.IsUnit && Q.IsUnit { // Already Q = P = O, so Q = [0]P
         return ZERO
     }
