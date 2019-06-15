@@ -10,6 +10,8 @@ var (
     ONE = big.NewInt(1)
     TWO = big.NewInt(2)
     THREE = big.NewInt(3)
+    FOUR = big.NewInt(4)
+    EIGHT = big.NewInt(8)
 )
 
 func Add(a, b, modulus *big.Int) *big.Int {
