@@ -106,7 +106,7 @@ func (ec EllipticCurve) Point_xP(x *big.Int, p Point) Point {
             k = ec.PointAdd(k, p)
         }
         p = ec.PointDoubling(p)
-        n.Div(n, TWO)
+        n.Rsh(n, 1)
     }
     return k
 }
