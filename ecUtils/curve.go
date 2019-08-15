@@ -61,12 +61,6 @@ func cmpPoint(P, Q Point) bool {
 }
 
 func (ec EllipticCurve) PointAdd(P, Q Point) Point {
-    if cmpPoint(P, Q) {
-        return ec.PointDoubling(P)
-    }
-    if P.X.Cmp(Q.X) == 0 {
-        return Origin
-    }
     if P.IsUnit {
         return Q
     }
@@ -74,27 +68,30 @@ func (ec EllipticCurve) PointAdd(P, Q Point) Point {
         return P
     }
 
-    lmd := Mul(Sub(Q.Y, P.Y, ec.Modulus),
-                InvMod(Sub(Q.X, P.X, ec.Modulus), ec.Modulus), ec.Modulus)
-    x3 := Sub(Sub(Exp(lmd, TWO, ec.Modulus), P.X, ec.Modulus), Q.X, ec.Modulus)
-    y3 := Sub(Mul(lmd, Sub(P.X, x3, ec.Modulus), ec.Modulus), P.Y, ec.Modulus)
+    if cmpPoint(P, Q) {
+        if P.Y.Cmp(ZERO) == 0 {
+            return Origin
+        }
 
-    return Point{x3, y3, false}
-}
+        lmd := Mul(Add(Mul(
+                        THREE, Exp(P.X, TWO, ec.Modulus), ec.Modulus),
+                    ec.A, ec.Modulus),
+                InvMod(Mul(TWO, P.Y, ec.Modulus), ec.Modulus), ec.Modulus)
+        x3 := Sub(Sub(Exp(lmd, TWO, ec.Modulus), P.X, ec.Modulus), P.X, ec.Modulus)
+        y3 := Sub(Mul(lmd, Sub(P.X, x3, ec.Modulus), ec.Modulus), P.Y, ec.Modulus)
+        return Point{x3, y3, false}
+    } else {
+        if P.X.Cmp(Q.X) == 0 {
+            return Origin
+        }
 
-func (ec EllipticCurve) PointDoubling(P Point) Point {
-    if P.Y.Cmp(ZERO) == 0 {
-        return Origin
+        lmd := Mul(Sub(Q.Y, P.Y, ec.Modulus),
+                    InvMod(Sub(Q.X, P.X, ec.Modulus), ec.Modulus), ec.Modulus)
+        x3 := Sub(Sub(Exp(lmd, TWO, ec.Modulus), P.X, ec.Modulus), Q.X, ec.Modulus)
+        y3 := Sub(Mul(lmd, Sub(P.X, x3, ec.Modulus), ec.Modulus), P.Y, ec.Modulus)
+        return Point{x3, y3, false}
     }
-
-    lmd := Mul(Add(Mul(
-                    THREE, Exp(P.X, TWO, ec.Modulus), ec.Modulus),
-                ec.A, ec.Modulus),
-            InvMod(Mul(TWO, P.Y, ec.Modulus), ec.Modulus), ec.Modulus)
-    x3 := Sub(Sub(Exp(lmd, TWO, ec.Modulus), P.X, ec.Modulus), P.X, ec.Modulus)
-    y3 := Sub(Mul(lmd, Sub(P.X, x3, ec.Modulus), ec.Modulus), P.Y, ec.Modulus)
-
-    return Point{x3, y3, false}
+    //return Point{x3, y3, false}
 }
 
 func (ec EllipticCurve) Point_xP(x *big.Int, p Point) Point {
@@ -105,7 +102,7 @@ func (ec EllipticCurve) Point_xP(x *big.Int, p Point) Point {
         if Mod(n, TWO).Cmp(ONE) == 0 {
             k = ec.PointAdd(k, p)
         }
-        p = ec.PointDoubling(p)
+        p = ec.PointAdd(p, p)
         n.Rsh(n, 1)
     }
     return k
