@@ -20,7 +20,7 @@ func exhaostiveSearchOrder(ec EllipticCurve, p Point) *big.Int {
 	if p.IsUnit {
 		return ONE
 	}
-	p2 := ec.PointDoubling(p)
+	p2 := ec.PointAdd(p, p)
 	cardinality := TWO
 	for !p2.IsUnit {
 		p2 = ec.PointAdd(p2, p)

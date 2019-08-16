@@ -56,6 +56,20 @@ func (ec EllipticCurve) Exist(X, Y *big.Int) bool {
     return l.Cmp(r) == 0
 }
 
+func (ec EllipticCurve) Get_y_coordinate_from_x(x *big.Int) *big.Int {
+    r := Exp(x, THREE, ec.Modulus) // x^3
+    u := Mul(ec.A, x, ec.Modulus) // a*x
+    r = Add(r, u, ec.Modulus) // x^3 + a*x
+    r = Add(r, ec.B, ec.Modulus) // x^3 + a*x + b
+
+    y := GetQuadraticResidueRoot(r, ec.Modulus)
+    if y != nil {
+        return y
+    } else {
+        return nil
+    }
+}
+
 func cmpPoint(P, Q Point) bool {
     return (P.X.Cmp(Q.X) == 0) && (P.Y.Cmp(Q.Y) == 0)
 }

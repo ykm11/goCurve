@@ -52,7 +52,7 @@ func Pollard_rho_f(ec EllipticCurve, alpha, beta, x Point, a, b, order *big.Int)
     if Mod(x.X, THREE).Cmp(ZERO) == 0 {
         return ec.PointAdd(beta, x), a, Add(b, ONE, order)
     } else if Mod(x.X, THREE).Cmp(ONE) == 0 {
-        return ec.PointDoubling(x), Mul(a, TWO, order), Mul(b, TWO, order)
+        return ec.PointAdd(x, x), Mul(a, TWO, order), Mul(b, TWO, order)
     } else {
         return ec.PointAdd(alpha, x), Add(a, ONE, order), b
     }
@@ -86,7 +86,7 @@ func Solve_ECDLP(ec EllipticCurve, P, Q Point, order *big.Int) *big.Int {
 
     if order.Cmp(big.NewInt(100)) == -1 {
         tmp_P := P
-        for i := ONE; i.Cmp(big.NewInt(100)) == -1; i = Add(i, ONE, nil) {
+        for i := ONE; i.Cmp(order) == -1; i = Add(i, ONE, nil) {
             if cmpPoint(tmp_P, Q) {
                 return i
             }
